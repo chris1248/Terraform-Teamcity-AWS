@@ -38,6 +38,21 @@ variable "app_port" {
   type        = number
 }
 
+variable "vpc_cidr_block" {
+  description = "The CIDR block for the VPC"
+  type = string
+}
+
+variable "public_cidr_block" {
+  description = "The CIDR block for a public subnet"
+  type = string
+}
+
+variable "private_cidr_block" {
+  description = "The CIDR block for a private subnet"
+  type = string
+}
+
 variable "vpn_cidr_blocks" {
   description = "A security measure to limit exposer of teamcity only to machines in a particular CIDR range"
   type        = list(string)

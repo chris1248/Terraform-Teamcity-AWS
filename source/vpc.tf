@@ -1,8 +1,6 @@
 # https://mxtoolbox.com/subnetcalculator.aspx
 resource "aws_vpc" "main" {
-  # CIDR IP Range (32 count)
-  # 10.3.1.0 - 10.3.1.31
-  cidr_block           = "10.3.1.0/27"
+  cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
   tags = merge(
     var.tags,
@@ -30,7 +28,7 @@ resource "aws_security_group" "teamcity" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] # TODO, replace this
   }
 
   egress {
@@ -46,7 +44,7 @@ resource "aws_security_group" "teamcity" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] # TODO, replace this
   }
 
   tags = merge(
@@ -60,9 +58,7 @@ resource "aws_security_group" "teamcity" {
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
   availability_zone = "${var.aws_region}a"
-  # CIDR IP Range (16 count)
-  # 10.3.1.0 - 10.3.1.15
-  cidr_block = "10.3.1.0/28" # For the server
+  cidr_block = var.public_cidr_block
 
   tags = merge(
     var.tags,
@@ -75,9 +71,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
   availability_zone = "${var.aws_region}b"
-  # CIDR IP Range (16 count)
-  # 10.3.1.16 - 10.3.1.31
-  cidr_block = "10.3.1.16/28" # for the build agents
+  cidr_block = var.private_cidr_block
 
   tags = merge(
     var.tags,
@@ -100,13 +94,13 @@ resource "aws_route_table" "router" {
   vpc_id = aws_vpc.main.id
 
   route {
-    cidr_block = "10.3.1.0/26"
+    cidr_block = var.vpc_cidr_block
     gateway_id = aws_internet_gateway.gateway.id
   }
 
   # Needed for ECS to pull the teamcity image from docker.io
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = "0.0.0.0/0" # TODO, replace this, or limit it
     gateway_id = aws_internet_gateway.gateway.id
   }
 
