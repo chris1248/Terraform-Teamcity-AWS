@@ -47,12 +47,7 @@ resource "aws_security_group" "teamcity" {
     cidr_blocks = ["0.0.0.0/0"] # TODO, replace this
   }
 
-  tags = merge(
-    var.tags,
-    {
-      Name = "TeamCity"
-    }
-  )
+  tags = var.tags
 }
 
 resource "aws_subnet" "public" {
@@ -60,12 +55,7 @@ resource "aws_subnet" "public" {
   availability_zone = "${var.aws_region}a"
   cidr_block = var.public_cidr_block
 
-  tags = merge(
-    var.tags,
-    {
-      Name = "TeamCity-public"
-    }
-  )
+  tags = var.tags
 }
 
 resource "aws_subnet" "private" {
@@ -73,21 +63,13 @@ resource "aws_subnet" "private" {
   availability_zone = "${var.aws_region}b"
   cidr_block = var.private_cidr_block
 
-  tags = merge(
-    var.tags,
-    {
-      Name = "TeamCity-private"
-    }
-  )
+  tags = var.tags
 }
 
 resource "aws_internet_gateway" "gateway" {
   vpc_id = aws_vpc.main.id
 
-  tags = merge(
-    var.tags,
-    { Name = "TeamCity" }
-  )
+  tags = var.tags
 }
 
 resource "aws_route_table" "router" {
@@ -104,10 +86,7 @@ resource "aws_route_table" "router" {
     gateway_id = aws_internet_gateway.gateway.id
   }
 
-  tags = merge(
-    var.tags,
-    { Name = "TeamCity" }
-  )
+  tags = var.tags
 }
 
 resource "aws_route_table_association" "private_link" {

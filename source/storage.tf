@@ -17,10 +17,7 @@ resource "aws_efs_file_system" "data_storage" {
     transition_to_primary_storage_class = "AFTER_1_ACCESS"
   }
 
-  tags = merge(
-    var.tags,
-    { Name = "TeamCity" }
-  )
+  tags = var.tags
 }
 
 resource "aws_efs_file_system_policy" "policy" {
@@ -74,7 +71,7 @@ resource "aws_efs_access_point" "data_directory" {
       permissions = 777
     }
   }
-  tags = merge(var.tags, { Name = "TeamCity" })
+  tags = var.tags
 }
 
 resource "aws_efs_access_point" "log_directory" {
@@ -93,5 +90,5 @@ resource "aws_efs_access_point" "log_directory" {
       permissions = 777
     }
   }
-  tags = merge(var.tags, { Name = "TeamCity" })
+  tags = var.tags
 }

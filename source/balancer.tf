@@ -6,7 +6,7 @@ resource aws_lb front_end {
   internal        = false
   load_balancer_type = "application"
 
-  tags = merge(var.tags, {Name = "TeamCity"} )
+  tags = var.tags
 }
 
 resource aws_lb_target_group targets {
@@ -16,7 +16,7 @@ resource aws_lb_target_group targets {
   target_type = "ip"
   vpc_id      = aws_vpc.main.id
 
-  tags = merge(var.tags, {Name = "TeamCity"} )
+  tags = var.tags
 }
 
 variable "ports" {
@@ -41,5 +41,5 @@ resource aws_alb_listener http_front_end {
     type = "forward"
     target_group_arn = aws_lb_target_group.targets.arn
   }
-  tags = merge(var.tags, {Name = "TeamCity"} )
+  tags = var.tags
 }

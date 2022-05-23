@@ -20,18 +20,12 @@ resource "aws_db_instance" "teamcity" {
   vpc_security_group_ids = [aws_security_group.teamcity.id]
   db_subnet_group_name   = aws_db_subnet_group.private.id
 
-  tags = merge(
-    var.tags,
-    { Name = "TeamCity" }
-  )
+  tags = var.tags
 }
 
 resource "aws_db_subnet_group" "private" {
   name       = var.name-simple
   subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
 
-  tags = merge(
-    var.tags,
-    { Name = "TeamCity" }
-  )
+  tags = var.tags
 }
