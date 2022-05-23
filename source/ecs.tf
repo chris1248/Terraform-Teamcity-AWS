@@ -89,6 +89,12 @@ resource "aws_ecs_service" "main" {
   network_configuration {
     security_groups  = [aws_security_group.teamcity.id]
     subnets          = [aws_subnet.public.id]
-    assign_public_ip = true
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.targets.id
+    container_name = "${var.name}-def"
+    container_port = var.app_port
   }
 }
