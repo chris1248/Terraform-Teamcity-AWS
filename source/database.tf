@@ -28,7 +28,7 @@ resource "aws_db_instance" "teamcity" {
 
 resource "aws_db_subnet_group" "private" {
   name       = var.name-simple
-  subnet_ids = [aws_subnet.private.id]
+  subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
 
   tags = merge(
     var.tags,

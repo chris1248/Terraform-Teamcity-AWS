@@ -1,5 +1,5 @@
 # Application Load Balancer
-resource "aws_lb" "front_end" {
+resource aws_lb front_end {
   name            = var.name
   subnets         = [aws_subnet.private.id, aws_subnet.public.id]
   security_groups = [aws_security_group.teamcity.id]
@@ -9,7 +9,7 @@ resource "aws_lb" "front_end" {
   tags = merge(var.tags, {Name = "TeamCity"} )
 }
 
-resource "aws_lb_target_group" "targets" {
+resource aws_lb_target_group targets {
   name        = var.name
   port        = var.app_port
   protocol    = "HTTPS"
@@ -24,12 +24,17 @@ variable "ports" {
     default = [8443, 443]
 }
 
-resource "aws_alb_listener" "http_front_end" {
+data aws_acm_certificate "company" {
+  domain = var.cert_domain
+}
+
+resource aws_alb_listener http_front_end {
   count = length(var.ports)
   load_balancer_arn = aws_lb.front_end.id
   port              = var.ports[count.index]
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.aws_acm_certificate.company.arn
 
   depends_on = [aws_lb_target_group.targets, aws_lb.front_end]
   default_action {
