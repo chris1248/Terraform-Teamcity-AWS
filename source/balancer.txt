@@ -1,4 +1,19 @@
+# ================================================================
 # Application Load Balancer
+# If you wanted to run teamcity behind a load balancer, this is how you would do it.
+# It would work fine, except that JetBrains, the creators of TeamCity do not provide
+# a health check endpoint that works reliably. And a target group requires health checks.
+# So this file is for demonstration purposes only.
+# Note, that in the ecs service terraform definition, you would place
+# a load balancer section like this:
+# 
+# load_balancer {
+#   target_group_arn = aws_lb_target_group.targets.id
+#   container_name = "${var.name}-def"
+#   container_port = var.app_port
+# }
+# ================================================================
+
 resource aws_lb front_end {
   name            = var.name
   subnets         = [aws_subnet.private.id, aws_subnet.public.id]
@@ -15,15 +30,6 @@ resource aws_lb_target_group targets {
   protocol    = "HTTPS"
   target_type = "ip"
   vpc_id      = aws_vpc.main.id
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 3
-    interval            = 5
-    path                = "/mnt/get/stateRevision"
-    protocol            = "HTTP"
-  }
 
   tags = var.tags
 }
@@ -52,3 +58,15 @@ resource aws_alb_listener http_front_end {
   }
   tags = var.tags
 }
+
+# resource aws_alb_listener_rule all_traffic {
+#   listener_arn = aws_alb_listener.http_front_end.arn
+#   priority     = 100
+#   action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.targets.id
+#   }
+#   lifecycle {
+#     ignore_changes = [action]
+#   }
+# }

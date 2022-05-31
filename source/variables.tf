@@ -91,8 +91,3 @@ variable postgres_password {
   description = "An admin password for the postgress administrator"
   type = string
 }
-
-variable cert_domain {
-  description = "certificate domain"
-  type = string
-}
