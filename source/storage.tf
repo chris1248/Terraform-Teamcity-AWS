@@ -6,7 +6,7 @@
 # Luckily Amazon has instructions on how to mount an EFS volume to a Fargate Task:
 # https://aws.amazon.com/premiumsupport/knowledge-center/ecs-fargate-mount-efs-containers-tasks/
 
-resource "aws_efs_file_system" "data_storage" {
+resource aws_efs_file_system data_storage {
   creation_token = var.name
 
 
@@ -20,7 +20,7 @@ resource "aws_efs_file_system" "data_storage" {
   tags = var.tags
 }
 
-resource "aws_efs_file_system_policy" "policy" {
+resource aws_efs_file_system_policy policy {
   file_system_id                     = aws_efs_file_system.data_storage.id
   bypass_policy_lockout_safety_check = false
 
@@ -43,19 +43,19 @@ resource "aws_efs_file_system_policy" "policy" {
   })
 }
 
-resource "aws_efs_mount_target" "mtarget_public" {
+resource aws_efs_mount_target mtarget_public {
   file_system_id  = aws_efs_file_system.data_storage.id
   subnet_id       = aws_subnet.public.id
   security_groups = [aws_security_group.teamcity.id]
 }
 
-resource "aws_efs_mount_target" "mtarget_private" {
+resource aws_efs_mount_target mtarget_private {
   file_system_id  = aws_efs_file_system.data_storage.id
   subnet_id       = aws_subnet.private.id
   security_groups = [aws_security_group.teamcity.id]
 }
 
-resource "aws_efs_access_point" "data_directory" {
+resource aws_efs_access_point data_directory {
   file_system_id = aws_efs_file_system.data_storage.id
   posix_user {
     uid            = var.user_id
@@ -74,7 +74,7 @@ resource "aws_efs_access_point" "data_directory" {
   tags = var.tags
 }
 
-resource "aws_efs_access_point" "log_directory" {
+resource aws_efs_access_point log_directory {
   file_system_id = aws_efs_file_system.data_storage.id
   posix_user {
     uid            = var.user_id

@@ -1,5 +1,5 @@
 # https://mxtoolbox.com/subnetcalculator.aspx
-resource "aws_vpc" "main" {
+resource aws_vpc main {
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
   tags = merge(
@@ -8,7 +8,7 @@ resource "aws_vpc" "main" {
   )
 }
 
-resource "aws_security_group" "teamcity" {
+resource aws_security_group teamcity {
   name        = var.name
   description = "Allow https inbound traffic"
   vpc_id      = aws_vpc.main.id
@@ -20,6 +20,14 @@ resource "aws_security_group" "teamcity" {
     to_port     = var.app_port
     protocol    = "tcp"
     cidr_blocks = var.vpn_cidr_blocks # Machines within the company VPN
+  }
+
+  ingress {
+    description = "For RDS Postgres traffic"
+    from_port   = var.postgres_port
+    to_port     = var.postgres_port
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   # To allow inbound connections on port 2049 (Network File System, or NFS) from the security group associated with your Fargate task or service
@@ -50,7 +58,7 @@ resource "aws_security_group" "teamcity" {
   tags = var.tags
 }
 
-resource "aws_subnet" "public" {
+resource aws_subnet public {
   vpc_id            = aws_vpc.main.id
   availability_zone = "${var.aws_region}a"
   cidr_block = var.public_cidr_block
@@ -58,7 +66,7 @@ resource "aws_subnet" "public" {
   tags = var.tags
 }
 
-resource "aws_subnet" "private" {
+resource aws_subnet private {
   vpc_id            = aws_vpc.main.id
   availability_zone = "${var.aws_region}b"
   cidr_block = var.private_cidr_block
@@ -66,13 +74,13 @@ resource "aws_subnet" "private" {
   tags = var.tags
 }
 
-resource "aws_internet_gateway" "gateway" {
+resource aws_internet_gateway gateway {
   vpc_id = aws_vpc.main.id
 
   tags = var.tags
 }
 
-resource "aws_route_table" "router" {
+resource aws_route_table router {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -89,12 +97,12 @@ resource "aws_route_table" "router" {
   tags = var.tags
 }
 
-resource "aws_route_table_association" "private_link" {
+resource aws_route_table_association private_link {
   subnet_id      = aws_subnet.private.id
   route_table_id = aws_route_table.router.id
 }
 
-resource "aws_route_table_association" "public_link" {
+resource aws_route_table_association public_link {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.router.id
 }

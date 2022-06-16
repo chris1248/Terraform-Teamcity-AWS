@@ -1,5 +1,6 @@
 
-resource "aws_db_instance" "teamcity" {
+resource aws_db_instance teamcity {
+  identifier            = var.name
   db_name               = var.name-simple
   engine                = "postgres"
   engine_version        = "13.4"
@@ -23,7 +24,7 @@ resource "aws_db_instance" "teamcity" {
   tags = var.tags
 }
 
-resource "aws_db_subnet_group" "private" {
+resource aws_db_subnet_group private {
   name       = var.name-simple
   subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
 

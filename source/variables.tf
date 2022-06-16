@@ -91,3 +91,8 @@ variable postgres_password {
   description = "An admin password for the postgress administrator"
   type = string
 }
+
+variable postgres_port {
+  description = "The port for postgres"
+  type = number
+}

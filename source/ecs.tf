@@ -1,4 +1,4 @@
-resource "aws_ecs_task_definition" "app" {
+resource aws_ecs_task_definition app {
   family                   = var.name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -69,7 +69,7 @@ resource "aws_ecs_task_definition" "app" {
   }
 }
 
-resource "aws_ecs_cluster" "main" {
+resource aws_ecs_cluster main {
   name = var.name
   setting {
     name  = "containerInsights"
@@ -78,7 +78,7 @@ resource "aws_ecs_cluster" "main" {
   tags = var.tags
 }
 
-resource "aws_ecs_service" "main" {
+resource aws_ecs_service main {
   name            = var.name
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn

@@ -7,11 +7,11 @@ terraform {
   }
 }
 
-provider "aws" {
+provider aws {
   region = var.aws_region
 }
 
-resource "aws_cloudwatch_log_group" "logs" {
+resource aws_cloudwatch_log_group logs {
   name              = "/fargate/service/${var.name}"
   tags              = var.tags
   retention_in_days = 30
