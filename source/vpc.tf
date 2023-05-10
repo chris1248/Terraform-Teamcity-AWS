@@ -15,6 +15,14 @@ resource aws_security_group teamcity {
 
   # To allow inbound connections from customers of the app
   ingress {
+    description = "for encyprypted traffic (https)"
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = var.vpn_cidr_blocks # Machines within the company VPN
+  }
+
+  ingress {
     description = "For VPN traffic"
     from_port   = var.app_port
     to_port     = var.app_port
@@ -36,7 +44,7 @@ resource aws_security_group teamcity {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # TODO, replace this
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   egress {
@@ -52,7 +60,7 @@ resource aws_security_group teamcity {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # TODO, replace this
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   tags = var.tags
