@@ -13,6 +13,16 @@ variable aws_region {
   type        = string
 }
 
+variable aws_azone_private {
+  description = "The AWS availability zone for private"
+  type = string
+}
+
+variable aws_azone_public {
+  description = "The AWS availability zone for public"
+  type = string
+}
+
 variable teamcity-docker-image {
   description = "The docker image to pull from hub.docker.com"
   type        = string

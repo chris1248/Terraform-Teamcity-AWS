@@ -60,7 +60,7 @@ resource aws_security_group teamcity {
 
 resource aws_subnet public {
   vpc_id            = aws_vpc.main.id
-  availability_zone = "${var.aws_region}a"
+  availability_zone = "${var.aws_region}${var.aws_azone_public}"
   cidr_block = var.public_cidr_block
 
   tags = var.tags
@@ -68,7 +68,7 @@ resource aws_subnet public {
 
 resource aws_subnet private {
   vpc_id            = aws_vpc.main.id
-  availability_zone = "${var.aws_region}b"
+  availability_zone = "${var.aws_region}${var.aws_azone_private}"
   cidr_block = var.private_cidr_block
 
   tags = var.tags

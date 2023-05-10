@@ -1,6 +1,8 @@
 name-simple           = "teamcity"
 name                  = "teamcity-server"
 aws_region            = "us-east-1"
+aws_azone_public      = "a"
+aws_azone_private     = "b"
 data_path             = "/data/teamcity_server/datadir"
 logs_path             = "/opt/teamcity/logs"
 teamcity-docker-image = "jetbrains/teamcity-server:latest"
