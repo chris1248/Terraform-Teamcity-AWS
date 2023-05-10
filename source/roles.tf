@@ -78,6 +78,25 @@ data aws_iam_policy efs_full_access_policy {
 data aws_iam_policy efs_client_access_policy {
   arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
 }
+
+data aws_iam_policy ec2_full_access_policy {
+  arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+}
+
+data aws_iam_policy cloudwatch_logs_access_policy {
+  arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "cloud_watch_logs_attachment" {
+  role = aws_iam_role.ecs_task_role.name
+  policy_arn = data.aws_iam_policy.cloudwatch_logs_access_policy.arn
+}
+
+resource aws_iam_role_policy_attachment ec2_attachment {
+  role = aws_iam_role.ecs_task_role.name
+  policy_arn = data.aws_iam_policy.ec2_full_access_policy.arn
+}
+
 resource aws_iam_role_policy_attachment role_full_attachment {
   role       = aws_iam_role.ecs_task_role.name
   policy_arn = data.aws_iam_policy.efs_full_access_policy.arn

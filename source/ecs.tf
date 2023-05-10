@@ -38,7 +38,8 @@ resource aws_ecs_task_definition app {
         "options" : {
           "awslogs-group" : "${aws_cloudwatch_log_group.logs.name}",
           "awslogs-region" : "${var.aws_region}",
-          "awslogs-stream-prefix" : "teamcity"
+          "awslogs-stream-prefix" : "teamcity",
+          "awslogs-create-group": "true"
         }
       },
       "healthCheck" : {
